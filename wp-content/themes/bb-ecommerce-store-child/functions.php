@@ -1,9 +1,9 @@
 <?php
 ini_set('display_errors', 1);
-
 ini_set('display_startup_errors', 1);
-
 error_reporting(E_ALL);
+
+$url_site = esc_url( home_url( '/'  ) );
 
 function produtos_abril_init() {
 	global $woocommerce, $post;
@@ -438,12 +438,14 @@ function profileGen(){
 ?>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+	console.clear();
 
 	// - GLOBALS 
 	//-------------------------------------------
 
-	var w 			 = window.innerWidth;
-	var url_site 	 = 'https://'+window.location.hostname+'/';
+	var w 			 			= window.innerWidth;
+	var url_site 	 			= '<?php echo($url_site);?>';
+	
 
 	//- IE FIX
 	//-------------------------------------------------
@@ -469,18 +471,69 @@ function profileGen(){
 	}
 
 	$(document).ready(function(){
-		$('#publish').click(function() {
-			var selectedValues 	= $('#acf-field-produtos-pedido-abril').val();
-			var post_id 		= '<?php echo($_GET["post"]);?>';
-			var add_action 		= '<?php echo($_GET["action"]);?>';
-			var urlajax			=  url_site+'cs01/ajaxcmdr.php?selectedValues='+selectedValues+'&post_id='+post_id+'&action=ajaxAtualizaEstoqueProduto'
+		var post_type 	= $('#post_type').val();
 
-			if(action == 'edit'){
-				alert("selectedValues: "+selectedValues);
-				alert("post_id: "+post_id);
-				alert("urlajax: "+urlajax);
+		if(post_type == 'pedidos_abril'){
+			var original_post_status 	= $('#original_post_status').val();
+
+			if(original_post_status == 'auto-draft' || original_post_status == 'publish'){
+				var originalaction 			= $('#originalaction').val();
+				var action 					= $('#hiddenaction').val();
+				
+				if(action == 'editpost' && originalaction == 'editpost'){
+					var post_ID 	 			= $('#post_ID').val();		
+					var submit_btn 				= $('#publish').val();
+					var pedidoprodutosatual 	= $('#acf-field-produtos-pedido-abril').val();
+
+					$('#publish').click(function() {
+						var pedido_abril_cliente 	= $('#acf-field-pedido-abril-cliente').val();
+						var selectedValues		 	= $('#acf-field-produtos-pedido-abril').val();
+
+						var url_ajax				=  url_site+'wp-content/themes/bb-ecommerce-store-child/ajaxcmdr.php';
+
+
+						
+						// console.log('w: '+w);
+						// console.log('url_site: '+url_site);		
+						// console.log('post_type: '+post_type);
+						// console.log('post_ID: '+post_ID);
+						// console.log('originalaction: '+originalaction);
+						// console.log('action: '+action);		
+						// console.log('original_post_status: '+original_post_status);
+						// console.log('submit_btn: '+submit_btn);
+						// console.log('pedido_abril_cliente: '+pedido_abril_cliente);
+						// console.log('selectedValues: '+selectedValues);
+						// console.log('url_ajax: '+url_ajax);
+						// console.log('pedidoprodutosatual: '+pedidoprodutosatual);
+						
+
+						$.ajax({
+							url: url_ajax,
+							data: {
+								pedidoprodutosatual: pedidoprodutosatual,
+								selectedValues: selectedValues,
+								post_ID: post_ID,
+								action: "ajaxAtualizaEstoqueProduto"
+							},
+							type: 'GET',
+							success: function(data) {		
+								//console.log('data_success: '+data);
+							},
+							beforeSend: function() {    
+								//activateLoad();
+							},
+							error: function(err){
+								//console.log(err);
+							}
+						});		
+
+					});
+				}
 			}
-			
-		});
+		}
+
+
 	});
+
+	
 </script>    

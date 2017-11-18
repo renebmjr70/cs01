@@ -1,56 +1,65 @@
 <?php
-// carregamos o core do wordpress
-require_once( 'wp-load.php' );
+$parse_uri = explode( 'wp-content', $_SERVER['SCRIPT_FILENAME'] );
+require_once( $parse_uri[0] . 'wp-load.php' );
 
-global $wpdb, $woocommerce, $post, $user;
+global $post, $wpdb, $user;
 
-if ( isset( $_GET['action']) && isset( $_GET['selectedValues']) && isset( $_GET['post_id'] ) ) {
-	$action 		= $_GET['action'];
-	$selectedValues = $_GET['selectedValues'];
-	$post_id 		= $_GET['post_id'];
+if ( isset( $_GET['action'] )  && isset( $_GET['selectedValues']) && isset( $_GET['post_ID'] ) ) {
+	$action = $_GET['action'];
 
-	$listasel 		= explode(',', $selectedValues);
+	switch ($action) {
+		case 'ajaxAtualizaEstoqueProduto':
+			$selectedValues = $_GET['selectedValues'];
+
+			if(isset($_GET['pedidoprodutosatual'])){
+				$pedidoprodutosatual = $_GET['pedidoprodutosatual'];
+
+				$result = array_diff($selectedValues,$pedidoprodutosatual);
+
+				
+				if(!empty($result)){
+					foreach ( $result as $rss ) {
+						
+						$estoque = get_field('estoque-produto-abril',$rss,true);					
+						
+						$estoque--;
+
+						if($estoque < 0){
+							$estoque = (int)(0);
+						}						
+	
+
+						update_field( 'estoque-produto-abril', $estoque, $rss );
+					}
+				}
+
+				$result2 = array_diff($pedidoprodutosatual,$selectedValues);
+
+
+				if(!empty($result2)){
+					foreach ( $result2 as $rss2 ) {
+					
+						
+						$estoque2 = get_field('estoque-produto-abril',$rss2,true);
+
+
+						$estoque2++;
+
+
+						update_field( 'estoque-produto-abril', $estoque2, $rss2 );
+					}
+				}
+		
+			} 
 
 	
-	echo "<pre>";
-	print_r($listasel);
-	echo "</pre><hr>";
-	
 
-	$pedidoprodutosatual = get_field('produtos-pedido-abril',$post_id,true);
 
-	foreach ( $pedidoprodutosatual as $lista ) {
-		//echo "<pre>";
-		//print_r($lista);
-		//echo "</pre>";	
 
-		$pLID[] = $lista->ID;
-
-		$estoque = get_field('estoque-produto-abril',$lista->ID,true);
-		echo "estoque: $estoque<br>";
-	}
-
-	echo "<pre>";
-	print_r($pLID);
-	echo "</pre><hr>";
-	
-	$result = array_diff($listasel,$pLID);
-
-	echo "<pre>";
-	print_r($result);
-	echo "</pre><hr>";
-
-	$result2 = array_diff($pLID,$listasel);
-
-	echo "<pre>";
-	print_r($result2);
-	echo "</pre><hr>";	
-} else {
-	echo "no way...";
+		break;
+		
+		default:
+			break;
+	}	
 }
-
-echo "action: $action<br>";
-echo "selectedValues: $selectedValues<br>";
-echo "post_id: $post_id<br>";
-
 ?>
