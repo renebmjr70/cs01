@@ -1,0 +1,1 @@
+document.cookie="rh_abril=; domain=abril.com.br; path=\/; expires=" + new Date(new Date().getTime() + 604800000).toGMTString();
