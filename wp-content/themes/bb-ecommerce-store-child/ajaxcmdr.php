@@ -4,10 +4,38 @@ require_once( $parse_uri[0] . 'wp-load.php' );
 
 global $post, $wpdb, $user;
 
-if ( isset( $_GET['action'] )  && isset( $_GET['selectedValues']) && isset( $_GET['post_ID'] ) ) {
+/*echo "<pre>";
+print_r($_GET);			
+echo "</pre><hr>";*/
+
+if ( isset( $_GET['action'] )  ) {
 	$action = $_GET['action'];
 
 	switch ($action) {
+		case 'ajaxAtualizaEstoqueSelect':
+			$produtos_lista = $_GET['produtos_lista'];
+			$produtos_texto = $_GET['produtos_texto'];
+			$conta 			= 0;
+
+			foreach ( $produtos_lista as $lista ) {
+				$estoque_lista 	= get_field('estoque-produto-abril',$lista,true);
+				
+				$novo_texto[] 	= $produtos_texto[$conta]."<span id='sp_it_$lista'> - ( ".$estoque_lista." ) disponíveis</span>";
+				
+				$conta++;
+			}
+
+			$novo_textojs = json_encode($novo_texto);
+
+			
+			/*echo "<pre>";
+			echo ($novo_textojs);			
+			echo "</pre><hr>";*/
+
+			echo $novo_textojs;
+
+			break;
+
 		case 'ajaxAtualizaEstoqueProduto':
 			$selectedValues = $_GET['selectedValues'];
 
@@ -51,12 +79,7 @@ if ( isset( $_GET['action'] )  && isset( $_GET['selectedValues']) && isset( $_GE
 				}
 		
 			} 
-
-	
-
-
-
-		break;
+			break;
 		
 		default:
 			break;

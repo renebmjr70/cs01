@@ -435,6 +435,10 @@ function profileGen(){
 	}
 }
 //profileGen();
+
+/*echo "<pre>";
+print_r($_SERVER);
+echo "</pre><hr>";*/
 ?>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
@@ -484,6 +488,31 @@ function profileGen(){
 					var post_ID 	 			= $('#post_ID').val();		
 					var submit_btn 				= $('#publish').val();
 					var pedidoprodutosatual 	= $('#acf-field-produtos-pedido-abril').val();
+					
+					var produtos_lista = [];
+					var produtos_texto = [];
+					$('#acf-field-produtos-pedido-abril').children().each(function () {    
+					    produtos_lista.push($(this).val()); //put them in array
+					    produtos_texto.push($(this).text());
+					});
+					/*var url_ajax 	=  url_site+'wp-content/themes/bb-ecommerce-store-child/ajaxcmdr.php';
+
+					$.ajax({
+						url: url_ajax,
+						data: {
+							produtos_lista: produtos_lista,
+							produtos_texto: produtos_texto,
+							action: "ajaxAtualizaEstoqueSelect"
+						},
+						type: 'GET',
+						success: function(data) {		
+							console.log(data);
+						}
+					});	*/
+
+
+					//console.log('produtos_lista: '+produtos_lista);
+					//console.log('produtos_texto: '+produtos_texto);
 
 					$('#publish').click(function() {
 						var pedido_abril_cliente 	= $('#acf-field-pedido-abril-cliente').val();
@@ -517,7 +546,7 @@ function profileGen(){
 							},
 							type: 'GET',
 							success: function(data) {		
-								//console.log('data_success: '+data);
+								console.log('data_success: '+data);
 							},
 							beforeSend: function() {    
 								//activateLoad();

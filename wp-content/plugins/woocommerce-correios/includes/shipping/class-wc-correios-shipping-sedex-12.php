@@ -1,6 +1,6 @@
 <?php
 /**
- * Correios SEDEX shipping method.
+ * Correios SEDEX 12 shipping method.
  *
  * @package WooCommerce_Correios/Classes/Shipping
  * @since   3.0.0
@@ -12,35 +12,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * SEDEX shipping method class.
+ * SEDEX 12 shipping method class.
  */
-class WC_Correios_Shipping_SEDEX extends WC_Correios_Shipping {
+class WC_Correios_Shipping_SEDEX_12 extends WC_Correios_Shipping {
 
 	/**
 	 * Service code.
-	 * 04014 - SEDEX without contract.
+	 * 40169 - SEDEX 12.
 	 *
 	 * @var string
 	 */
-	protected $code = '04014';
+	protected $code = '40169';
 
 	/**
-	 * Corporate code.
-	 * 04162 - SEDEX with contract.
-	 *
-	 * @var string
-	 */
-	protected $corporate_code = '04162';
-
-	/**
-	 * Initialize SEDEX.
+	 * Initialize SEDEX 12.
 	 *
 	 * @param int $instance_id Shipping zone instance.
 	 */
 	public function __construct( $instance_id = 0 ) {
-		$this->id           = 'correios-sedex';
-		$this->method_title = __( 'SEDEX', 'woocommerce-correios' );
-		$this->more_link    = 'http://www.correios.com.br/para-voce/correios-de-a-a-z/sedex';
+		$this->id           = 'correios-sedex12';
+		$this->method_title = __( 'SEDEX 12', 'woocommerce-correios' );
+		$this->more_link    = 'http://www.correios.com.br/para-voce/correios-de-a-a-z/sedex-12';
 
 		parent::__construct( $instance_id );
 	}
